@@ -1,6 +1,8 @@
 # The path to Ruby Enlightenment starts with the following:
 # files to test go here
 
+$LOAD_PATH << File.dirname(__FILE__)
+
 require 'about_asserts'
 require 'about_db_connect'
 require 'about_crud'
