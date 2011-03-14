@@ -3,7 +3,6 @@
 
 $LOAD_PATH << File.dirname(__FILE__)
 
-require 'about_asserts'
 require 'about_db_connect'
 require 'about_crud'
 require 'about_data_types'

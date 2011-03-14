@@ -3,27 +3,19 @@ require 'mongo'
 require 'edgecase'
 
 class AboutDBConnect < EdgeCase::Koan
-  include Mongo
-  
-  def setup
-    @mongo = Connection.new
-    @db = @mongo.db('hack0318')
+  def test_connecting_to_a_database
+    connection = Mongo::Connection.new
+    assert_not_nil connection
+    assert_equal __, connection.class
   end
-  
-  def teardown
-    @db.collections.each do |collection|
-      @db.drop_collection(collection.name) unless collection.name =~ /indexes$/
-    end
-  end
-  
-  def test_connection
-    assert_nil @mongo, "MongoDB is not connected"
-    assert_instance_of Mongo::Collection, @mongo
-  end
-  
-  def test_database_exist
-    assert !@db, "DB not available"
-    assert_instance_of ___, @db
+
+  def test_creating_and_deleting_a_database
+    connection = Mongo::Connection.new
+    db = connection.db("mongo_koans")
+    assert_not_nil db, "DB not available"
+    assert_equal __, db.class
+
+    connection.drop_database("mongo_koans")
   end
 
 end
