@@ -48,35 +48,35 @@ class AboutGroups < EdgeCase::Koan
   end
 
   def test_simple_group
-    assert_equal __, @zips.group([:city], {}, {}, 'function() {}', true), "Group by one field"
+    assert_equal __, @zips.group(:key => [:city], :initial => {}, :reduce => 'function() {}'), "Group by one field"
   end
   
   def test_simple_aggregation
     assert_equal [{"city"=>"chicago", 'zsum' => 3300.0}, {"city"=>"decatur", 'zsum' => 0}], 
-      @zips.group([:city], {}, { 'zsum' => 0 }, 'function(doc,out) { out.zsum += doc.population; }', true), "Group by one field"
+      @zips.group(:key => [:city], :initial => { 'zsum' => 0 }, :reduce => 'function(doc,out) { out.zsum += doc.population; }'), "Group by one field"
     #The fourth parameter doesn't look like Ruby.  Why?  It's a string containing a JavaScript function.
   end
   
   def test_aggregation_two_results
     assert_equal [{"city"=>__, 'zsum' => 3300.0, 'zstr' => 'ILILIL'}, {"city"=>"decatur", 'zsum' => 3006.0, 'zstr' => 'ILILIL'}], 
-      @zips.group([:city], {}, { 'zsum' => 0, 'zstr' => '' }, 'function(doc,out) { out.zsum += doc.population; out.zstr += doc.state; }', true), 
+      @zips.group(:key => [:city], :initial => { 'zsum' => 0, 'zstr' => '' }, :reduce => 'function(doc,out) { out.zsum += doc.population; out.zstr += doc.state; }'), 
       "Group by one field, two aggregate fields"
   end
   
   def test_aggregation_with_finalize
     assert_equal [{"city"=>"chicago", "avg_pop"=>1100.0, "zsum"=>3300.0, "zc"=>3.0}, 
                   {"city"=>"springfield", "avg_pop"=>1002.0, "zsum"=>3006.0, "zc"=>3.0}], 
-          @zips.group([:city], {}, { 'zsum' => 0, 'zc' => 0, 'avg_pop' => 0 }, 
-                     'function(doc,out) { out.zsum += doc.population; out.zc += 1; }',  
-                     'function(out){ out.avg_pop = out.zsum / out.zc}'), 
+          @zips.group(:key => [:city], :initial => { 'zsum' => 0, 'zc' => 0, 'avg_pop' => 0 }, 
+                     :reduce => 'function(doc,out) { out.zsum += doc.population; out.zc += 1; }',  
+                     :finalize => 'function(out){ out.avg_pop = out.zsum / out.zc}'), 
           "Group by one field with finalize"
   end
 
   def test_aggregation_with_condition
     assert_equal [{"city"=>"chicago", 'zsum' => 3000.0}], 
-          @zips.group([:city], {"city"=>"chicago"}, { 'zsum' => 0 }, 'function(doc,out) { out.zsum += doc.population; }', true), 
+          @zips.group(:key => [:city], :cond => {"city"=>"chicago"}, :initial => { 'zsum' => 0 }, :reduce => 'function(doc,out) { out.zsum += doc.population; }'), 
           "Group by one field with condition"
-  end  
+  end
   #In his blog, Kyle Banker said "group() is rather a beast".  Do you agree?
 
 end

@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 task :default => :walk_the_path
 

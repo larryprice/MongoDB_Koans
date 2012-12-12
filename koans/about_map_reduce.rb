@@ -12,17 +12,17 @@ class AboutMapReduce < EdgeCase::Koan
     @comments.remove
 
     @comments.insert({ :text => "lmao! great article!", :author => 'kbanker', :votes => 4 })
-    @comments.insert({ :text => "boring", :author => 'ghendry', :votes => 1 })
+    @comments.insert({ :text => "boring", :author => 'lprice', :votes => 1 })
     @comments.insert({ :text => "tl:dr", :author => 'kbanker', :votes => 3 })
-    @comments.insert({ :text => "best article ever", :author => 'ghendry', :votes => 2 })
+    @comments.insert({ :text => "best article ever", :author => 'lprice', :votes => 2 })
     @comments.insert({ :text => "very weird", :author => 'kbanker', :votes => 2 })
+    @comments.insert({ :text => "pretty good", :author => 'lprice', :votes => 3 })
+    @comments.insert({ :text => "lmao! great article!", :author => 'ghendry', :votes => 4 })
+    @comments.insert({ :text => "boring", :author => 'ghendry', :votes => 1 })
+    @comments.insert({ :text => "tl:dr", :author => 'ghendry', :votes => 3 })
+    @comments.insert({ :text => "best article ever", :author => 'ghendry', :votes => 2 })
+    @comments.insert({ :text => "very weird", :author => 'ghendry', :votes => 2 })
     @comments.insert({ :text => "pretty good", :author => 'ghendry', :votes => 3 })
-    @comments.insert({ :text => "lmao! great article!", :author => 'nstowe', :votes => 4 })
-    @comments.insert({ :text => "boring", :author => 'nstowe', :votes => 1 })
-    @comments.insert({ :text => "tl:dr", :author => 'nstowe', :votes => 3 })
-    @comments.insert({ :text => "best article ever", :author => 'nstowe', :votes => 2 })
-    @comments.insert({ :text => "very weird", :author => 'nstowe', :votes => 2 })
-    @comments.insert({ :text => "pretty good", :author => 'nstowe', :votes => 3 })
   end
   
   def teardown
@@ -35,18 +35,18 @@ class AboutMapReduce < EdgeCase::Koan
     map = "function() { emit(this.author, {votes: this.votes}); }"
     reduce = "function(key, values) { var sum = 0; values.forEach(function(doc) { sum += doc.votes; }); return {votes: sum}; }"
 
-    assert_equal 3, @comments.map_reduce(map, reduce).count
-    assert_equal __, @comments.map_reduce(map, reduce).find.first['_id']
-    assert_equal __, @comments.map_reduce(map, reduce).find.first['value']['votes']
+    assert_equal 3, @comments.map_reduce(map, reduce, :out => "none").count
+    assert_equal __, @comments.map_reduce(map, reduce, :out => "none").find.first['_id']
+    assert_equal __, @comments.map_reduce(map, reduce, :out => "none").find.first['value']['votes']
   end
   
   def test_map_reduce_with_query
     map = "function() { emit(this.author, {votes: this.votes}); }"
     reduce = "function(key, values) { var sum = 0; values.forEach(function(doc) { sum += doc.votes; }); return {votes: sum}; }"
 
-    assert_equal 3, @comments.map_reduce(map, reduce, {:query => {:votes => {'$gt' => 1}}}).count
-    assert_equal 'ghendry', @comments.map_reduce(map, reduce, {:query => {:votes => {'$gt' => 1}}}).find.first['value']
-    assert_equal __, @comments.map_reduce(map, reduce, {:query => {:votes => {'$gt' => 1}}}).find.first['value']['votes']
+    assert_equal 3, @comments.map_reduce(map, reduce, {:query => {:votes => {'$gt' => 1}}, :out => "none"}).count
+    assert_equal 'lprice', @comments.map_reduce(map, reduce, {:query => {:votes => {'$gt' => 1}}, :out => "none"}).find.first['value']
+    assert_equal __, @comments.map_reduce(map, reduce, {:query => {:votes => {'$gt' => 1}}, :out => "none"}).find.first['value']['votes']
   end
 
 end
