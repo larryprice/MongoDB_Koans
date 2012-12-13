@@ -1,10 +1,10 @@
 =MongoDB Ruby Driver Koans - larryprice fork
 
-=Editor: Larry Price <larry.price.dev@gmail.com>
+Editor: Larry Price <larry.price.dev@gmail.com>
 
 This is a forked repo of an updated MongoDB Ruby Driver Koans, which is in turn a fork of the original repo.
 
-This fork is for updates to:
+This fork is specifically updated to work better with:
 * Ruby 1.9.3
 * MongoDB Ruby Driver 1.8 or later
 
